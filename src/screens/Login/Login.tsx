@@ -4,13 +4,13 @@ import {
   Wapper,
   TopBox,
   BottomBox,
-  SighUpText,
+  SighUpLink,
   Seperator,
   SeperatorText,
-  FaceBookLogin,
-  FaceBookText,
+  FBLoginButton,
+  FBLoginText,
 } from "./style";
-import { HorizontalLine } from "../../components/Base";
+import { HorizontalLine, Form, Input, Button } from "../../components/Base";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faInstagram,
@@ -24,28 +24,24 @@ const Login: React.FC = () => (
         <div>
           <FontAwesomeIcon icon={faInstagram} size="4x" />
         </div>
-        <form>
-          <input type="text" placeholder="Username" />
-          <input type="password" placeholder="Password" />
-          <input type="submit" value="Login" />
-        </form>
+        <Form>
+          <Input type="text" placeholder="Username" />
+          <Input type="password" placeholder="Password" />
+          <Button type="submit" value="Login" />
+        </Form>
         <Seperator>
           <HorizontalLine />
           <SeperatorText>OR</SeperatorText>
           <HorizontalLine />
         </Seperator>
-        <FaceBookLogin>
-          <FontAwesomeIcon
-            icon={faFacebookSquare}
-            size={"lg"}
-            color="#395184"
-          />
-          <FaceBookText>Log in with Facebook</FaceBookText>
-        </FaceBookLogin>
+        <FBLoginButton>
+          <FontAwesomeIcon icon={faFacebookSquare} size={"lg"} />
+          <FBLoginText>Log in with Facebook</FBLoginText>
+        </FBLoginButton>
       </TopBox>
       <BottomBox>
         <span>Don`t have an account?</span>
-        <SighUpText to="#">Sign up</SighUpText>
+        <SighUpLink to="/sign-up">Sign up</SighUpLink>
       </BottomBox>
     </Wapper>
   </Container>
