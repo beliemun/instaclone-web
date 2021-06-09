@@ -10,5 +10,6 @@ declare module "styled-components" {
     accent: string;
     hover: string;
     facebook: string;
+    error: string;
   }
 }

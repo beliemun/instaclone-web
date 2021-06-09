@@ -10,6 +10,7 @@ export const lightTheme: DefaultTheme = {
   accent: "#0597f6",
   hover: "#5352ed",
   facebook: "#395184",
+  error: "#e74c3c",
 };
 
 export const darkTheme: DefaultTheme = {
@@ -21,6 +22,7 @@ export const darkTheme: DefaultTheme = {
   accent: "#0597f6",
   hover: "#5352ed",
   facebook: "#395184",
+  error: "#e74c3c",
 };
 
 export const GlobalStyles = createGlobalStyle`
