@@ -1,4 +1,4 @@
-import React from "react";
+import React, { isValidElement } from "react";
 import { TopBox, FBLoginButton, FBLoginText } from "./styles";
 import {
   AuthLayout,
@@ -18,22 +18,54 @@ import { Link } from "../../components/shared/Base";
 import PageTitle from "../../components/shared/PageTitle";
 import { SubmitHandler, useForm } from "react-hook-form";
 import ErrorContainer from "../../components/auth/ErrorContainer";
+import gql from "graphql-tag";
+import { useMutation } from "@apollo/client";
 
-type Inputs = {
-  username: string;
-  password2: string;
-  password22: string;
-};
+interface IForm {
+  userName: string;
+  password: string;
+  error: string;
+}
+
+const LOGIN_MUTATION = gql`
+  mutation login($userName: String!, $password: String!) {
+    login(userName: $userName, password: $password) {
+      ok
+      token
+      error
+    }
+  }
+`;
 
 const Login: React.FC = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
-  } = useForm();
-  const onSubmitValid: SubmitHandler<Inputs> = (data) => {
-    console.log(data, "valid");
+    formState: { errors, isValid },
+    getValues,
+    setError,
+  } = useForm<IForm>({ mode: "onChange" });
+  const [login, { loading }] = useMutation(LOGIN_MUTATION, {
+    onCompleted: (data) => {
+      const {
+        login: { ok, error, token },
+      } = data;
+      if (!ok) {
+        setError("error", { message: error });
+      }
+    },
+  });
+  const onSubmitValid: SubmitHandler<IForm> = (data) => {
+    if (loading) {
+      return;
+    }
+    const { userName, password } = getValues();
+    login({
+      variables: { userName, password },
+    });
   };
+  // To do: Fix Errors!!!
+  console.log(isValid, loading);
   return (
     <AuthLayout>
       <PageTitle title="Login" />
@@ -45,21 +77,39 @@ const Login: React.FC = () => {
           <Input
             type="text"
             placeholder="Username"
-            {...register("username", {
+            hasError={Boolean(errors?.userName?.message)}
+            {...register("userName", {
               required: true,
-              minLength: 6,
+              minLength: {
+                value: 4,
+                message: "• Username should be longer than 4 chars.",
+              },
+              // pattern: {
+              //   value: /^[a-zA-Z]+$/,
+              //   message: "• Username must contain only the alphabet.",
+              // },
             })}
           />
+          <ErrorContainer message={errors?.userName?.message} />
           <Input
             type="password"
             placeholder="Password"
-            {...register("password", { required: true, minLength: 6 })}
+            hasError={Boolean(errors?.password?.message)}
+            {...register("password", {
+              required: true,
+              minLength: {
+                value: 4,
+                message: "• Password should be longer than 4 chars.",
+              },
+            })}
           />
-          <ErrorContainer>
-            <div>{errors.username && "• User name is too short!"}</div>
-            <div>{errors.password && "• Password is too short!"}</div>
-          </ErrorContainer>
-          <Submit type="submit" value="Login" />
+          <ErrorContainer message={errors?.password?.message} />
+          <Submit
+            type="submit"
+            value={loading ? "Loading..." : "Log In"}
+            disabled={!isValid || loading}
+          />
+          <ErrorContainer message={errors?.error?.message} />
         </Form>
         <Seperator />
         <FBLoginButton>

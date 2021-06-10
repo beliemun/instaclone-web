@@ -7,13 +7,15 @@ const Submit = styled.input`
   color: white;
   background-color: ${(props) => props.theme.accent};
   border-radius: 5px;
-  margin: 20px 0;
   padding: 10px;
+  margin: 15px 0 !important;
   text-align: center;
   cursor: pointer;
+  opacity: ${(props) => (props.disabled ? 0.5 : 1)};
   transition: background-color 0.3s ease-in-out;
   &:hover {
-    background-color: ${(props) => props.theme.hover};
+    background-color: ${(props) =>
+      props.disabled ? props.theme.accent : props.theme.hover};
   }
 `;
 

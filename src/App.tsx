@@ -1,5 +1,5 @@
-import { useReactiveVar } from "@apollo/client";
-import { isdarkModeVar } from "./apollo";
+import { ApolloProvider, useReactiveVar } from "@apollo/client";
+import { client, isdarkModeVar } from "./apollo";
 import { ThemeProvider } from "styled-components";
 import {
   GlobalStyles,
@@ -12,12 +12,14 @@ import { HelmetProvider } from "react-helmet-async";
 const App = () => {
   const isdarkMode = useReactiveVar(isdarkModeVar);
   return (
-    <HelmetProvider>
-      <ThemeProvider theme={isdarkMode ? darkTheme : lightTheme}>
-        <GlobalStyles />
-        <Router />
-      </ThemeProvider>
-    </HelmetProvider>
+    <ApolloProvider client={client}>
+      <HelmetProvider>
+        <ThemeProvider theme={isdarkMode ? darkTheme : lightTheme}>
+          <GlobalStyles />
+          <Router />
+        </ThemeProvider>
+      </HelmetProvider>
+    </ApolloProvider>
   );
 };
 

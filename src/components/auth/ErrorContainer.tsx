@@ -3,17 +3,17 @@ import styled from "styled-components";
 
 const Container = styled.div`
   color: ${(props) => props.theme.error};
+  font-size: 13px;
+  font-weight: bold;
   text-align: center;
-  div {
-    margin-top: 5px;
-    &:first-child {
-      margin-top: 20px;
-    }
-  }
+  margin: 5px 0;
 `;
 
-const ErrorContainer: React.FC = ({ children }) => (
-  <Container>{children}</Container>
-);
+interface IProps {
+  message: string | undefined;
+}
+
+const ErrorContainer: React.FC<IProps> = ({ message }) =>
+  message ? <Container>{message}</Container> : null;
 
 export default ErrorContainer;

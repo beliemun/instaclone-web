@@ -12,10 +12,7 @@ export const TopBox = styled(BaseCenterBox)`
   }
   form {
     input {
-      margin-bottom: 5px;
-      &:first-child {
-        margin-top: 10px;
-      }
+      margin-top: 5px;
     }
   }
 `;
@@ -27,5 +24,4 @@ export const Header = styled.h1`
   line-height: 1.2;
   letter-spacing: -0.5px;
   text-align: center;
-  margin-bottom: 5px;
 `;

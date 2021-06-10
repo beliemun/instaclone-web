@@ -9,9 +9,7 @@ export const TopBox = styled(BaseCenterBox)`
   }
   form {
     input {
-      &:first-child {
-        margin-bottom: 5px;
-      }
+      margin-top: 5px;
     }
   }
 `;

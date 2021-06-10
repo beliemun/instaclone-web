@@ -27,10 +27,10 @@ const SignUp: React.FC = () => (
       </Form>
       <Seperator />
       <Form>
-        <Input type="text" placeholder="Email" />
-        <Input type="text" placeholder="Fullname" />
-        <Input type="text" placeholder="Username" />
-        <Input type="password" placeholder="Password" />
+        <Input type="text" placeholder="Email" hasError={false} />
+        <Input type="text" placeholder="Fullname" hasError={false} />
+        <Input type="text" placeholder="Username" hasError={false} />
+        <Input type="password" placeholder="Password" hasError={false} />
         <Submit type="submit" value="Sign up" />
       </Form>
     </TopBox>
