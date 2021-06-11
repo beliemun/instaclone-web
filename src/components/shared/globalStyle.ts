@@ -14,9 +14,9 @@ export const lightTheme: DefaultTheme = {
 };
 
 export const darkTheme: DefaultTheme = {
-  color: "#2c2c2c",
+  color: "#ffffff",
   buttonTextColor: "#ffffff",
-  backgroundColor: "#fafafa",
+  backgroundColor: "#2c2c2c",
   borderColorLight: "#dbdbdb",
   borderColorDark: "#a9a9a9",
   accent: "#0597f6",

@@ -18,7 +18,9 @@ const Input = styled.input<IProps>`
     color: darkgray;
   }
   &:focus {
-    border-color: ${(props) => props.theme.borderColorDark};
+    border: 1px solid
+      ${(props) =>
+        props.hasError ? props.theme.error : props.theme.borderColorDark};
   }
 `;
 

@@ -1,4 +1,4 @@
-import React, { isValidElement } from "react";
+import React from "react";
 import { TopBox, FBLoginButton, FBLoginText } from "./styles";
 import {
   AuthLayout,
@@ -17,9 +17,11 @@ import { routes } from "../../routes";
 import { Link } from "../../components/shared/Base";
 import PageTitle from "../../components/shared/PageTitle";
 import { SubmitHandler, useForm } from "react-hook-form";
-import ErrorContainer from "../../components/auth/ErrorContainer";
+import AccentedText from "../../components/auth/AccentedText";
 import gql from "graphql-tag";
 import { useMutation } from "@apollo/client";
+import { singIn } from "../../apollo";
+import { useLocation } from "react-router-dom";
 
 interface IForm {
   userName: string;
@@ -38,23 +40,37 @@ const LOGIN_MUTATION = gql`
 `;
 
 const Login: React.FC = () => {
+  const location = useLocation() as any;
+
   const {
     register,
     handleSubmit,
     formState: { errors, isValid },
     getValues,
     setError,
-  } = useForm<IForm>({ mode: "onChange" });
+    clearErrors,
+  } = useForm<IForm>({
+    mode: "onChange",
+    defaultValues: {
+      userName: location?.state?.userName || "",
+      password: location?.state?.password || "",
+    },
+  });
+
   const [login, { loading }] = useMutation(LOGIN_MUTATION, {
-    onCompleted: (data) => {
+    onCompleted: (res) => {
       const {
         login: { ok, error, token },
-      } = data;
+      } = res;
       if (!ok) {
         setError("error", { message: error });
       }
+      if (token) {
+        singIn(token);
+      }
     },
   });
+
   const onSubmitValid: SubmitHandler<IForm> = (data) => {
     if (loading) {
       return;
@@ -64,8 +80,7 @@ const Login: React.FC = () => {
       variables: { userName, password },
     });
   };
-  // To do: Fix Errors!!!
-  console.log(isValid, loading);
+
   return (
     <AuthLayout>
       <PageTitle title="Login" />
@@ -73,28 +88,27 @@ const Login: React.FC = () => {
         <div>
           <FontAwesomeIcon icon={faInstagram} size="4x" />
         </div>
+        <AccentedText type={"info"} message={location?.state?.message} />
         <Form onSubmit={handleSubmit(onSubmitValid)}>
           <Input
             type="text"
             placeholder="Username"
             hasError={Boolean(errors?.userName?.message)}
+            onKeyDown={() => clearErrors()}
             {...register("userName", {
               required: true,
               minLength: {
                 value: 4,
                 message: "• Username should be longer than 4 chars.",
               },
-              // pattern: {
-              //   value: /^[a-zA-Z]+$/,
-              //   message: "• Username must contain only the alphabet.",
-              // },
             })}
           />
-          <ErrorContainer message={errors?.userName?.message} />
+          <AccentedText type={"error"} message={errors?.userName?.message} />
           <Input
             type="password"
             placeholder="Password"
             hasError={Boolean(errors?.password?.message)}
+            onKeyDown={() => clearErrors()}
             {...register("password", {
               required: true,
               minLength: {
@@ -103,13 +117,13 @@ const Login: React.FC = () => {
               },
             })}
           />
-          <ErrorContainer message={errors?.password?.message} />
+          <AccentedText type={"error"} message={errors?.password?.message} />
           <Submit
             type="submit"
             value={loading ? "Loading..." : "Log In"}
             disabled={!isValid || loading}
           />
-          <ErrorContainer message={errors?.error?.message} />
+          <AccentedText type={"error"} message={errors?.error?.message} />
         </Form>
         <Seperator />
         <FBLoginButton>
