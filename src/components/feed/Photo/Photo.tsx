@@ -24,7 +24,7 @@ import { faHeart as faHeartSoild } from "@fortawesome/free-solid-svg-icons";
 import gql from "graphql-tag";
 import { useMutation } from "@apollo/client";
 import { seeFeed_seeFeed } from "../../../__generated__/seeFeed";
-import { BoldText, Icon } from "../../base";
+import { BoldText, Icon, Link } from "../../base";
 import Avatar from "../../shared/Avatar";
 import Comment from "../Comment";
 
@@ -53,6 +53,7 @@ const Photo: React.FC<IProps> = ({ photo }) => {
     isMine,
     isLiked,
   } = photo;
+
   const updateToggleLike = (cache: any, result: any) => {
     const {
       data: {
@@ -75,6 +76,7 @@ const Photo: React.FC<IProps> = ({ photo }) => {
       });
     }
   };
+
   const [toogleLike, { loading }] = useMutation(TOGGLE_LIKE_MUTATION, {
     variables: {
       id,
@@ -84,6 +86,36 @@ const Photo: React.FC<IProps> = ({ photo }) => {
     // apollo가 data를 fetch해서 바뀐 cache부분을 확인해서 update한다.
     // 하지만 실시간 처리 및 큰 쿼리인 경우 쿼리 전체를 타겟으로 하는 것은 좋지 않다.
   });
+
+  const remakeCaption = (text: string) => {
+    let origin = text.replaceAll("#", " #").replaceAll("  ", " ").trim();
+    const rgx = /#[a-zA-Z가-힣\u0E00-\u0E7Fぁ-んァ-ヾ一-龯a-záéíóúüñç]+/;
+    const result = origin.split(" ").map((word, index) => {
+      if (rgx.test(word)) {
+        const obj = word.match(rgx) ?? [];
+        // 해시태그가 정규표현식에 완전히 일치할 경우
+        if (obj[0] === word) {
+          return (
+            <Link key={index} to={`/hashtags/${word}`}>
+              {`${word} `}
+            </Link>
+          );
+          // 정규표현식에 일치하지 않는 문자 포함 시
+        } else {
+          const rest = word.replace(obj[0], "");
+          return (
+            <React.Fragment key={index}>
+              <Link to={`/hashtags/${obj[0]}`}>{obj[0]}</Link>
+              {`${rest} `}
+            </React.Fragment>
+          );
+        }
+      } else {
+        return <React.Fragment key={index}>{`${word} `}</React.Fragment>;
+      }
+    });
+    return result;
+  };
 
   return (
     <Container>
@@ -123,10 +155,13 @@ const Photo: React.FC<IProps> = ({ photo }) => {
             {likes === 1 ? " like" : " likes"}
           </Likes>
         )}
-        <Caption>
-          <BoldText>{user.userName}</BoldText>
-          <CaptionText>{caption}</CaptionText>
-        </Caption>
+        {caption && (
+          <Caption>
+            <BoldText>{user.userName}</BoldText>
+            <CaptionText>{remakeCaption(caption)}</CaptionText>
+            {/* <CaptionText>{caption}</CaptionText> */}
+          </Caption>
+        )}
         {commentCount !== 0 && (
           <CommentCount>
             {commentCount}

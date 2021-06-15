@@ -7,6 +7,9 @@ const Container = styled(BaseCenterBox)`
   padding: 20px 0px;
   text-align: center;
   background-color: ${(props) => props.theme.windowColor};
+  span {
+    margin-right: 5px;
+  }
 `;
 
 const BottomBox: React.FC = ({ children }) => <Container>{children}</Container>;

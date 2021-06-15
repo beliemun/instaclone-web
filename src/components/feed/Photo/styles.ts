@@ -51,6 +51,15 @@ export const Button = styled.button`
 
 export const Caption = styled.div`
   margin-top: 10px;
+  line-height: 1.5;
+  mark {
+    color: ${(props) => props.theme.accent};
+    background-color: inherit;
+    cursor: pointer;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 `;
 
 export const CaptionText = styled.span`

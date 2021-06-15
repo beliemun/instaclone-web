@@ -23,7 +23,6 @@ export const HorizontalLine = styled.div`
 export const Link = styled(ReactRouteLink)`
   color: #0597f6;
   font-weight: 600;
-  margin: 5px;
   text-decoration: none;
   transition: color 0.3s ease-in-out;
   &:hover {

@@ -21,7 +21,7 @@ import AccentedText from "../../components/auth/AccentedText";
 import gql from "graphql-tag";
 import { useMutation } from "@apollo/client";
 import { singIn } from "../../apollo";
-import { useLocation } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 
 interface IForm {
   userName: string;
@@ -41,6 +41,7 @@ const LOGIN_MUTATION = gql`
 
 const Login: React.FC = () => {
   const location = useLocation() as any;
+  const history = useHistory();
 
   const {
     register,
@@ -67,6 +68,7 @@ const Login: React.FC = () => {
       }
       if (token) {
         singIn(token);
+        history.push(routes.home);
       }
     },
   });
