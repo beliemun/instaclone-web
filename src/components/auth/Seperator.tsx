@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { HorizontalLine } from "../shared";
+import { HorizontalLine } from "../base";
 
 const Container = styled.div`
   display: flex;
@@ -11,7 +11,7 @@ const Container = styled.div`
 
 const Text = styled.span`
   color: ${(props) => props.theme.borderColorDark};
-  font-weight: bold;
+  font-weight: 600;
   margin: 10px;
 `;
 

@@ -12,6 +12,7 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  background-color: ${(props) => props.theme.backgroundColor};
 `;
 
 const Wapper = styled.div`

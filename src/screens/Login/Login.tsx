@@ -14,7 +14,7 @@ import {
   faFacebookSquare,
 } from "@fortawesome/free-brands-svg-icons";
 import { routes } from "../../routes";
-import { Link } from "../../components/shared/Base";
+import { Link } from "../../components/base/Base";
 import PageTitle from "../../components/shared/PageTitle";
 import { SubmitHandler, useForm } from "react-hook-form";
 import AccentedText from "../../components/auth/AccentedText";

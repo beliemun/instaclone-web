@@ -1,11 +1,12 @@
 import { HashRouter, Route, Switch } from "react-router-dom";
+import { useReactiveVar } from "@apollo/client";
+import { isLoggedInVar } from "../apollo";
+import routes from "./routes";
+import HeaderLayout from "../components/shared/HeaderLayout";
 import NotFound from "../screens/404/404";
 import Home from "../screens/Home/Home";
 import Login from "../screens/Login";
 import SignUp from "../screens/SignUp";
-import routes from "./routes";
-import { useReactiveVar } from "@apollo/client";
-import { isLoggedInVar } from "../apollo";
 
 const Router = () => {
   const isLoggedIn = useReactiveVar(isLoggedInVar);
@@ -13,7 +14,13 @@ const Router = () => {
     <HashRouter>
       <Switch>
         <Route path={routes.home} exact>
-          {isLoggedIn ? <Home /> : <Login />}
+          {isLoggedIn ? (
+            <HeaderLayout>
+              <Home />
+            </HeaderLayout>
+          ) : (
+            <Login />
+          )}
         </Route>
         {!isLoggedIn ? (
           <>

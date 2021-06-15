@@ -13,7 +13,7 @@ const Container = styled.div<IStlyedProps>`
   color: ${(props) =>
     props.type === "error" ? props.theme.error : props.theme.accent};
   font-size: 13px;
-  font-weight: bold;
+  font-weight: 600;
   text-align: center;
   margin: 5px 0;
 `;

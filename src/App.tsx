@@ -1,11 +1,7 @@
 import { ApolloProvider, useReactiveVar } from "@apollo/client";
 import { client, isDarkModeVar } from "./apollo";
 import { ThemeProvider } from "styled-components";
-import {
-  GlobalStyles,
-  darkTheme,
-  lightTheme,
-} from "./components/shared/globalStyle";
+import { GlobalStyles, darkTheme, lightTheme } from "./globalStyle";
 import { Router } from "./routes";
 import { HelmetProvider } from "react-helmet-async";
 

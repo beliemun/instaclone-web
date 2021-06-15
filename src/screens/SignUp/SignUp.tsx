@@ -14,7 +14,7 @@ import {
   Submit,
 } from "../../components/auth";
 import AccentedText from "../../components/auth/AccentedText";
-import { Link } from "../../components/shared/Base";
+import { Link } from "../../components/base/Base";
 import PageTitle from "../../components/shared/PageTitle";
 import { routes } from "../../routes";
 import { Header, TopBox } from "./styles";

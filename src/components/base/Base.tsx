@@ -22,11 +22,32 @@ export const HorizontalLine = styled.div`
 
 export const Link = styled(ReactRouteLink)`
   color: #0597f6;
-  font-weight: bold;
+  font-weight: 600;
   margin: 5px;
   text-decoration: none;
   transition: color 0.3s ease-in-out;
   &:hover {
     color: ${(props) => props.theme.hover};
   }
+`;
+
+export const Icon = styled(ReactRouteLink)`
+  color: ${(props) => props.theme.color};
+  &:not(:first-child) {
+    margin-left: 15px;
+  }
+`;
+
+export const Button = styled.button`
+  font-size: 13px;
+  font-weight: 600;
+  color: ${(props) => props.theme.buttonTextColor};
+  background-color: ${(props) => props.theme.accent};
+  border-radius: 3px;
+  padding: 6px 10px;
+  cursor: pointer;
+`;
+
+export const BoldText = styled.span`
+  font-weight: 900;
 `;

@@ -5,6 +5,7 @@ export const lightTheme: DefaultTheme = {
   color: "#2c2c2c",
   buttonTextColor: "#ffffff",
   backgroundColor: "#fafafa",
+  windowColor: "#ffffff",
   borderColorLight: "#dbdbdb",
   borderColorDark: "#a9a9a9",
   accent: "#0597f6",
@@ -17,6 +18,7 @@ export const darkTheme: DefaultTheme = {
   color: "#ffffff",
   buttonTextColor: "#ffffff",
   backgroundColor: "#2c2c2c",
+  windowColor: "#2c2c2c",
   borderColorLight: "#dbdbdb",
   borderColorDark: "#a9a9a9",
   accent: "#0597f6",
@@ -39,5 +41,8 @@ export const GlobalStyles = createGlobalStyle`
   button{
     all:unset;
     box-sizing:border-box;
+  }
+  a {
+    text-decoration:none;
   }
 `;

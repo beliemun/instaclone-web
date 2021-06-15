@@ -1,9 +1,10 @@
 import styled from "styled-components";
-import { BaseCenterBox } from "../../components/shared/Base";
+import { BaseCenterBox } from "../../components/base/Base";
 
 export const TopBox = styled(BaseCenterBox)`
   padding: 20px 40px;
   margin-bottom: 10px;
+  background-color: ${(props) => props.theme.windowColor};
   & > div:first-child {
     margin-bottom: 20px;
   }
@@ -23,6 +24,6 @@ export const FBLoginButton = styled.button`
 export const FBLoginText = styled.span`
   color: ${(props) => props.theme.facebook};
   font-size: 15px;
-  font-weight: bold;
+  font-weight: 600;
   margin-left: 10px;
 `;
