@@ -27,9 +27,15 @@ import { seeFeed_seeFeed } from "../../../__generated__/seeFeed";
 import { BoldText, Icon, Link } from "../../base";
 import Avatar from "../../shared/Avatar";
 import Comment from "../Comment";
+import { SubmitHandler, useForm } from "react-hook-form";
+import useUser from "../../../hooks/useUser";
 
 interface IProps {
   photo: seeFeed_seeFeed;
+}
+
+interface IForm {
+  comment: string;
 }
 
 const TOGGLE_LIKE_MUTATION = gql`
@@ -41,9 +47,19 @@ const TOGGLE_LIKE_MUTATION = gql`
   }
 `;
 
+const CREATE_COMMENT_MUTATION = gql`
+  mutation createComment($photoId: Int!, $text: String!) {
+    createComment(photoId: $photoId, text: $text) {
+      ok
+      error
+      id
+    }
+  }
+`;
+
 const Photo: React.FC<IProps> = ({ photo }) => {
   const {
-    id,
+    id: photoId,
     user,
     file,
     caption,
@@ -53,6 +69,7 @@ const Photo: React.FC<IProps> = ({ photo }) => {
     isMine,
     isLiked,
   } = photo;
+  const { data: userData } = useUser();
 
   const updateToggleLike = (cache: any, result: any) => {
     const {
@@ -61,25 +78,37 @@ const Photo: React.FC<IProps> = ({ photo }) => {
       },
     } = result;
     if (ok) {
-      cache.writeFragment({
-        id: `Photo:${id}`,
-        fragment: gql`
-          fragment ISLIKED on Photo {
-            isLiked
-            likes
-          }
-        `,
-        data: {
-          isLiked: !isLiked,
-          likes: isLiked ? likes - 1 : likes + 1,
+      cache.modify({
+        id: `Photo:${photoId}`,
+        fields: {
+          isLiked(prev: any) {
+            return !prev;
+          },
+          likes(prev: any) {
+            return isLiked ? prev - 1 : prev + 1;
+          },
         },
       });
+      //  apollo 3.0 이전 방식
+      // cache.writeFragment({
+      //   id: `Photo:${id}`,
+      //   fragment: gql`
+      //     fragment ISLIKED on Photo {
+      //       isLiked
+      //       likes
+      //     }
+      //   `,
+      //   data: {
+      //     isLiked: !isLiked,
+      //     likes: isLiked ? likes - 1 : likes + 1,
+      //   },
+      // });
     }
   };
 
-  const [toogleLike, { loading }] = useMutation(TOGGLE_LIKE_MUTATION, {
+  const [toogleLike] = useMutation(TOGGLE_LIKE_MUTATION, {
     variables: {
-      id,
+      id: photoId,
     },
     update: updateToggleLike,
     // refetchQueries: [{ query: FEED_QUERY }],
@@ -93,7 +122,8 @@ const Photo: React.FC<IProps> = ({ photo }) => {
     const result = origin.split(" ").map((word, index) => {
       if (rgx.test(word)) {
         const obj = word.match(rgx) ?? [];
-        // 해시태그가 정규표현식에 완전히 일치할 경우
+        // 해시태그가 정규표현식에 완전히 일치할 경우.
+        // 예) #天気 #ビスを展開
         if (obj[0] === word) {
           return (
             <Link key={index} to={`/hashtags/${word}`}>
@@ -101,6 +131,7 @@ const Photo: React.FC<IProps> = ({ photo }) => {
             </Link>
           );
           // 정규표현식에 일치하지 않는 문자 포함 시
+          // 예) #天気、 #スポーツ?? #ビスを展開。
         } else {
           const rest = word.replace(obj[0], "");
           return (
@@ -115,6 +146,58 @@ const Photo: React.FC<IProps> = ({ photo }) => {
       }
     });
     return result;
+  };
+
+  const creaetCommentUpdate = (cache: any, result: any) => {
+    const {
+      data: {
+        createComment: { ok, id },
+      },
+    } = result;
+    if (ok && userData?.me) {
+      const { comment } = getValues();
+      setValue("comment", "");
+      const newComment = {
+        createAt: Date.now(),
+        id,
+        isMine: true,
+        text: comment,
+        user: {
+          ...userData.me,
+        },
+      };
+      cache.modify({
+        id: `Photo:${photoId}`,
+        fields: {
+          comments(prev: any) {
+            return [...prev, newComment];
+          },
+          // 주석해도 카운트가 왜 올라기지?
+          // commentCount(prev: any) {
+          //   return prev + 1;
+          // },
+        },
+      });
+    }
+  };
+
+  const [createCommentMutation, { loading }] = useMutation(
+    CREATE_COMMENT_MUTATION,
+    { update: creaetCommentUpdate }
+  );
+
+  const { register, handleSubmit, setValue, getValues } = useForm<IForm>();
+  const onSubmitValid: SubmitHandler<IForm> = (data) => {
+    const { comment } = data;
+    if (loading) {
+      return;
+    }
+    createCommentMutation({
+      variables: {
+        photoId,
+        text: comment,
+      },
+    });
   };
 
   return (
@@ -159,7 +242,6 @@ const Photo: React.FC<IProps> = ({ photo }) => {
           <Caption>
             <BoldText>{user.userName}</BoldText>
             <CaptionText>{remakeCaption(caption)}</CaptionText>
-            {/* <CaptionText>{caption}</CaptionText> */}
           </Caption>
         )}
         {commentCount !== 0 && (
@@ -173,6 +255,17 @@ const Photo: React.FC<IProps> = ({ photo }) => {
             <Comment comment={comment} key={comment?.id} />
           ))}
         </Comments>
+        <div>
+          <form onSubmit={handleSubmit(onSubmitValid)}>
+            <input
+              type="text"
+              placeholder="write a comment"
+              {...register("comment", {
+                required: true,
+              })}
+            />
+          </form>
+        </div>
       </Footer>
     </Container>
   );
