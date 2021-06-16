@@ -7,7 +7,7 @@ interface IProps {
   comment: seeFeed_seeFeed_comments | null;
 }
 
-const Comment: React.FC<IProps> = ({ comment }) => {
+const CommentItem: React.FC<IProps> = ({ comment }) => {
   return (
     <Container key={comment?.id}>
       <BoldText>{comment?.user.userName}</BoldText>
@@ -16,4 +16,4 @@ const Comment: React.FC<IProps> = ({ comment }) => {
   );
 };
 
-export default Comment;
+export default CommentItem;

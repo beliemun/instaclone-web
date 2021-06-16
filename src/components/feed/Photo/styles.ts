@@ -1,6 +1,10 @@
 import styled from "styled-components";
 import { BoldText } from "../../base";
 
+export const Button = styled.button`
+  cursor: pointer;
+`;
+
 export const Container = styled.div`
   max-width: 615px;
   background-color: ${(props) => props.theme.windowColor};
@@ -19,11 +23,11 @@ export const Header = styled.div`
   }
 `;
 
-export const Name = styled(BoldText)`
+export const Author = styled(BoldText)`
   margin-left: 10px;
 `;
 
-export const PhotoFile = styled.div`
+export const Image = styled.div`
   img {
     width: 100%;
     height: 615px;
@@ -31,26 +35,27 @@ export const PhotoFile = styled.div`
   }
 `;
 
-export const Footer = styled.div`
-  padding: 10px;
-`;
+export const Footer = styled.div``;
 
-export const PhtoActions = styled.div`
+export const ActionIcons = styled.div`
   display: flex;
   justify-content: space-between;
+  padding: 10px 10px 0;
+`;
+
+export const LikeCountContainer = styled.div`
+  padding: 10px 10px 0;
 `;
 
 export const Likes = styled(BoldText)`
   display: block;
-  margin-top: 10px;
 `;
 
-export const Button = styled.button`
-  cursor: pointer;
+export const CaptionContainer = styled.div`
+  padding: 10px 10px 0;
 `;
 
 export const Caption = styled.div`
-  margin-top: 10px;
   line-height: 1.5;
   mark {
     color: ${(props) => props.theme.accent};
@@ -66,13 +71,12 @@ export const CaptionText = styled.span`
   margin-left: 5px;
 `;
 
-export const Comments = styled.div`
-  margin-top: 10px;
+export const CommentCountContainer = styled.div`
+  padding: 10px 10px 0;
 `;
 
 export const CommentCount = styled.span`
   display: block;
   font-size: 12px;
   color: ${(props) => props.theme.borderColorDark};
-  margin-top: 10px;
 `;

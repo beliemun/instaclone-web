@@ -1,16 +1,18 @@
 import React from "react";
 import {
+  Button,
   Container,
   Header,
-  Name,
-  PhotoFile,
+  Author,
+  Image,
   Footer,
-  PhtoActions,
+  ActionIcons,
+  LikeCountContainer,
   Likes,
-  Button,
+  CaptionContainer,
   Caption,
   CaptionText,
-  Comments,
+  CommentCountContainer,
   CommentCount,
 } from "./styles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -21,21 +23,15 @@ import {
   faPaperPlane,
 } from "@fortawesome/free-regular-svg-icons";
 import { faHeart as faHeartSoild } from "@fortawesome/free-solid-svg-icons";
-import gql from "graphql-tag";
 import { useMutation } from "@apollo/client";
 import { seeFeed_seeFeed } from "../../../__generated__/seeFeed";
 import { BoldText, Icon, Link } from "../../base";
 import Avatar from "../../shared/Avatar";
-import Comment from "../Comment";
-import { SubmitHandler, useForm } from "react-hook-form";
-import useUser from "../../../hooks/useUser";
+import gql from "graphql-tag";
+import CommentList from "../CommentList";
 
 interface IProps {
   photo: seeFeed_seeFeed;
-}
-
-interface IForm {
-  comment: string;
 }
 
 const TOGGLE_LIKE_MUTATION = gql`
@@ -47,19 +43,9 @@ const TOGGLE_LIKE_MUTATION = gql`
   }
 `;
 
-const CREATE_COMMENT_MUTATION = gql`
-  mutation createComment($photoId: Int!, $text: String!) {
-    createComment(photoId: $photoId, text: $text) {
-      ok
-      error
-      id
-    }
-  }
-`;
-
 const Photo: React.FC<IProps> = ({ photo }) => {
   const {
-    id: photoId,
+    id,
     user,
     file,
     caption,
@@ -69,7 +55,6 @@ const Photo: React.FC<IProps> = ({ photo }) => {
     isMine,
     isLiked,
   } = photo;
-  const { data: userData } = useUser();
 
   const updateToggleLike = (cache: any, result: any) => {
     const {
@@ -79,7 +64,7 @@ const Photo: React.FC<IProps> = ({ photo }) => {
     } = result;
     if (ok) {
       cache.modify({
-        id: `Photo:${photoId}`,
+        id: `Photo:${id}`,
         fields: {
           isLiked(prev: any) {
             return !prev;
@@ -108,7 +93,7 @@ const Photo: React.FC<IProps> = ({ photo }) => {
 
   const [toogleLike] = useMutation(TOGGLE_LIKE_MUTATION, {
     variables: {
-      id: photoId,
+      id,
     },
     update: updateToggleLike,
     // refetchQueries: [{ query: FEED_QUERY }],
@@ -148,69 +133,17 @@ const Photo: React.FC<IProps> = ({ photo }) => {
     return result;
   };
 
-  const creaetCommentUpdate = (cache: any, result: any) => {
-    const {
-      data: {
-        createComment: { ok, id },
-      },
-    } = result;
-    if (ok && userData?.me) {
-      const { comment } = getValues();
-      setValue("comment", "");
-      const newComment = {
-        createAt: Date.now(),
-        id,
-        isMine: true,
-        text: comment,
-        user: {
-          ...userData.me,
-        },
-      };
-      cache.modify({
-        id: `Photo:${photoId}`,
-        fields: {
-          comments(prev: any) {
-            return [...prev, newComment];
-          },
-          // 주석해도 카운트가 왜 올라기지?
-          // commentCount(prev: any) {
-          //   return prev + 1;
-          // },
-        },
-      });
-    }
-  };
-
-  const [createCommentMutation, { loading }] = useMutation(
-    CREATE_COMMENT_MUTATION,
-    { update: creaetCommentUpdate }
-  );
-
-  const { register, handleSubmit, setValue, getValues } = useForm<IForm>();
-  const onSubmitValid: SubmitHandler<IForm> = (data) => {
-    const { comment } = data;
-    if (loading) {
-      return;
-    }
-    createCommentMutation({
-      variables: {
-        photoId,
-        text: comment,
-      },
-    });
-  };
-
   return (
     <Container>
       <Header>
         <Avatar url={user.avatar ?? ""} size={32} />
-        <Name>{user.userName}</Name>
+        <Author>{user.userName}</Author>
       </Header>
-      <PhotoFile>
+      <Image>
         <img src={file} alt={caption ?? "picture"} />
-      </PhotoFile>
+      </Image>
       <Footer>
-        <PhtoActions>
+        <ActionIcons>
           <div>
             <Button onClick={() => toogleLike()}>
               <FontAwesomeIcon
@@ -231,41 +164,32 @@ const Photo: React.FC<IProps> = ({ photo }) => {
               <FontAwesomeIcon icon={faBookmark} size={"lg"} />
             </Icon>
           </div>
-        </PhtoActions>
-        {likes !== 0 && (
-          <Likes>
-            {likes}
-            {likes === 1 ? " like" : " likes"}
-          </Likes>
-        )}
-        {caption && (
-          <Caption>
-            <BoldText>{user.userName}</BoldText>
-            <CaptionText>{remakeCaption(caption)}</CaptionText>
-          </Caption>
-        )}
-        {commentCount !== 0 && (
-          <CommentCount>
-            {commentCount}
-            {commentCount === 1 ? " comment" : " comments"}
-          </CommentCount>
-        )}
-        <Comments>
-          {comments?.map((comment) => (
-            <Comment comment={comment} key={comment?.id} />
-          ))}
-        </Comments>
-        <div>
-          <form onSubmit={handleSubmit(onSubmitValid)}>
-            <input
-              type="text"
-              placeholder="write a comment"
-              {...register("comment", {
-                required: true,
-              })}
-            />
-          </form>
-        </div>
+        </ActionIcons>
+        <LikeCountContainer>
+          {likes !== 0 && (
+            <Likes>
+              {likes}
+              {likes === 1 ? " like" : " likes"}
+            </Likes>
+          )}
+        </LikeCountContainer>
+        <CaptionContainer>
+          {caption && (
+            <Caption>
+              <BoldText>{user.userName}</BoldText>
+              <CaptionText>{remakeCaption(caption)}</CaptionText>
+            </Caption>
+          )}
+        </CaptionContainer>
+        <CommentCountContainer>
+          {commentCount !== 0 && (
+            <CommentCount>
+              {commentCount}
+              {commentCount === 1 ? " comment" : " comments"}
+            </CommentCount>
+          )}
+        </CommentCountContainer>
+        <CommentList photoId={id} comments={comments} />
       </Footer>
     </Container>
   );

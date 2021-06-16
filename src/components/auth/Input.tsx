@@ -15,7 +15,7 @@ const Input = styled.input<IProps>`
   padding: 10px;
   transition: border-color 0.3s ease-in-out;
   &::placeholder {
-    color: darkgray;
+    color: ${(props) => props.theme.borderColorDark};
   }
   &:focus {
     border: 1px solid
