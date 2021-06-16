@@ -7,12 +7,9 @@ import {
   Image,
   Footer,
   ActionIcons,
-  LikeCountContainer,
   Likes,
-  CaptionContainer,
   Caption,
   CaptionText,
-  CommentCountContainer,
   CommentCount,
 } from "./styles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -52,7 +49,7 @@ const Photo: React.FC<IProps> = ({ photo }) => {
     likes,
     comments,
     commentCount,
-    isMine,
+    // isMine,
     isLiked,
   } = photo;
 
@@ -74,20 +71,6 @@ const Photo: React.FC<IProps> = ({ photo }) => {
           },
         },
       });
-      //  apollo 3.0 이전 방식
-      // cache.writeFragment({
-      //   id: `Photo:${id}`,
-      //   fragment: gql`
-      //     fragment ISLIKED on Photo {
-      //       isLiked
-      //       likes
-      //     }
-      //   `,
-      //   data: {
-      //     isLiked: !isLiked,
-      //     likes: isLiked ? likes - 1 : likes + 1,
-      //   },
-      // });
     }
   };
 
@@ -165,30 +148,24 @@ const Photo: React.FC<IProps> = ({ photo }) => {
             </Icon>
           </div>
         </ActionIcons>
-        <LikeCountContainer>
-          {likes !== 0 && (
-            <Likes>
-              {likes}
-              {likes === 1 ? " like" : " likes"}
-            </Likes>
-          )}
-        </LikeCountContainer>
-        <CaptionContainer>
-          {caption && (
-            <Caption>
-              <BoldText>{user.userName}</BoldText>
-              <CaptionText>{remakeCaption(caption)}</CaptionText>
-            </Caption>
-          )}
-        </CaptionContainer>
-        <CommentCountContainer>
-          {commentCount !== 0 && (
-            <CommentCount>
-              {commentCount}
-              {commentCount === 1 ? " comment" : " comments"}
-            </CommentCount>
-          )}
-        </CommentCountContainer>
+        {likes !== 0 && (
+          <Likes>
+            {likes}
+            {likes === 1 ? " like" : " likes"}
+          </Likes>
+        )}
+        {caption && (
+          <Caption>
+            <BoldText>{user.userName}</BoldText>
+            <CaptionText>{remakeCaption(caption)}</CaptionText>
+          </Caption>
+        )}
+        {commentCount !== 0 && (
+          <CommentCount>
+            {commentCount}
+            {commentCount === 1 ? " comment" : " comments"}
+          </CommentCount>
+        )}
         <CommentList photoId={id} comments={comments} />
       </Footer>
     </Container>

@@ -59,7 +59,7 @@ const SignUp: React.FC = () => {
     getValues,
     setError,
     clearErrors,
-  } = useForm<IForm>({ mode: "onChange" });
+  } = useForm<IForm>({ mode: "onBlur" });
 
   const [createAccount, { loading }] = useMutation(CREATE_ACCOUNT_MUTATION, {
     onCompleted: (res) => {
@@ -175,8 +175,10 @@ const SignUp: React.FC = () => {
             type="password"
             placeholder="Password"
             hasError={Boolean(errors?.password?.message)}
+            onKeyDown={() => clearErrors()}
             {...register("password", { required: "Password is requried." })}
           />
+          <AccentedText type={"error"} message={errors?.password?.message} />
           <Submit
             type="submit"
             value={loading ? "Loading..." : "Sign Up"}

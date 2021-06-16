@@ -1,6 +1,6 @@
 import React from "react";
 import { seeFeed_seeFeed_comments } from "../../../__generated__/seeFeed";
-import { Container, CommentContainer, Form } from "./styles";
+import { CommentContainer, Form } from "./styles";
 import { SubmitHandler, useForm } from "react-hook-form";
 import useUser from "../../../hooks/useUser";
 import CommentItem from "../CommentItem";
@@ -38,24 +38,37 @@ const CommentList: React.FC<IProps> = ({ photoId, comments }) => {
       const { comment } = getValues();
       setValue("comment", "");
       const newComment = {
-        createAt: Date.now(),
+        __typename: "Comment",
         id,
-        isMine: true,
         text: comment,
+        isMine: true,
+        createAt: Date.now(),
         user: {
           ...userData.me,
         },
       };
+      const newCacheComment = cache.writeFragment({
+        fragment: gql`
+          fragment WriteComment on Comment {
+            id
+            text
+            isMine
+            createdAt
+            user {
+              userName
+              avatar
+            }
+          }
+        `,
+        data: newComment,
+      });
+      console.log(newCacheComment);
       cache.modify({
         id: `Photo:${photoId}`,
         fields: {
           comments(prev: any) {
-            return [...prev, newComment];
+            return [...prev, newCacheComment];
           },
-          // 주석해도 카운트가 왜 올라기지?
-          // commentCount(prev: any) {
-          //   return prev + 1;
-          // },
         },
       });
     }
@@ -81,12 +94,14 @@ const CommentList: React.FC<IProps> = ({ photoId, comments }) => {
   };
 
   return (
-    <Container>
-      <CommentContainer>
-        {comments?.map((comment) => (
-          <CommentItem comment={comment} key={comment?.id} />
-        ))}
-      </CommentContainer>
+    <>
+      {comments?.length !== 0 && (
+        <CommentContainer>
+          {comments?.map((comment) => (
+            <CommentItem comment={comment} key={comment?.id} />
+          ))}
+        </CommentContainer>
+      )}
       <Form onSubmit={handleSubmit(onSubmitValid)}>
         <input
           type="text"
@@ -96,7 +111,7 @@ const CommentList: React.FC<IProps> = ({ photoId, comments }) => {
           })}
         />
       </Form>
-    </Container>
+    </>
   );
 };
 

@@ -40,23 +40,17 @@ export const Footer = styled.div``;
 export const ActionIcons = styled.div`
   display: flex;
   justify-content: space-between;
-  padding: 10px 10px 0;
-`;
-
-export const LikeCountContainer = styled.div`
-  padding: 10px 10px 0;
+  padding: 10px;
 `;
 
 export const Likes = styled(BoldText)`
+  padding: 0 10px 10px;
   display: block;
-`;
-
-export const CaptionContainer = styled.div`
-  padding: 10px 10px 0;
 `;
 
 export const Caption = styled.div`
   line-height: 1.5;
+  padding: 0 10px 10px;
   mark {
     color: ${(props) => props.theme.accent};
     background-color: inherit;
@@ -71,12 +65,9 @@ export const CaptionText = styled.span`
   margin-left: 5px;
 `;
 
-export const CommentCountContainer = styled.div`
-  padding: 10px 10px 0;
-`;
-
 export const CommentCount = styled.span`
   display: block;
   font-size: 12px;
+  padding: 0 10px;
   color: ${(props) => props.theme.borderColorDark};
 `;
