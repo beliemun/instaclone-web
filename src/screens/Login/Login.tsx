@@ -14,7 +14,7 @@ import {
   faFacebookSquare,
 } from "@fortawesome/free-brands-svg-icons";
 import { routes } from "../../routes";
-import { Link } from "../../components/base/Base";
+import { BaseLink } from "../../components/base";
 import PageTitle from "../../components/shared/PageTitle";
 import { SubmitHandler, useForm } from "react-hook-form";
 import AccentedText from "../../components/auth/AccentedText";
@@ -135,7 +135,7 @@ const Login: React.FC = () => {
       </TopBox>
       <BottomBox>
         <span>Don`t have an account?</span>
-        <Link to={routes.signUp}>Sign up</Link>
+        <BaseLink to={routes.signUp}>Sign up</BaseLink>
       </BottomBox>
     </AuthLayout>
   );

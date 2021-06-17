@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { Container, Text, DeleteButton } from "./styles";
 import { seeFeed_seeFeed_comments } from "../../../__generated__/seeFeed";
 import { BoldText } from "../../base";
@@ -15,9 +16,10 @@ const DELETE_COMMENT_MUTATION = gql`
 
 interface IProps {
   comment: seeFeed_seeFeed_comments | null;
+  photoId: number;
 }
 
-const CommentItem: React.FC<IProps> = ({ comment }) => {
+const CommentItem: React.FC<IProps> = ({ comment, photoId }) => {
   const [deleteCommentMutation] = useMutation(DELETE_COMMENT_MUTATION, {
     variables: {
       id: comment?.id,
@@ -33,7 +35,7 @@ const CommentItem: React.FC<IProps> = ({ comment }) => {
           id: `Comment:${comment?.id}`,
         });
         cache.modify({
-          id: `Photo:${comment?.photo.id}`,
+          id: `Photo:${photoId}`,
           fields: {
             commentCount(prev) {
               return prev - 1;
@@ -48,7 +50,9 @@ const CommentItem: React.FC<IProps> = ({ comment }) => {
   };
   return (
     <Container key={comment?.id}>
-      <BoldText>{comment?.user.userName}</BoldText>
+      <Link to={`/users/${comment?.user.userName}`}>
+        <BoldText>{comment?.user.userName}</BoldText>
+      </Link>
       <Text>{comment?.text}</Text>
       {comment?.isMine && (
         <DeleteButton onClick={onDeleteClick}>Delete</DeleteButton>

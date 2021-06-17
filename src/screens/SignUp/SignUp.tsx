@@ -14,19 +14,10 @@ import {
   Submit,
 } from "../../components/auth";
 import AccentedText from "../../components/auth/AccentedText";
-import { Link } from "../../components/base/Base";
+import { BaseLink } from "../../components/base/";
 import PageTitle from "../../components/shared/PageTitle";
 import { routes } from "../../routes";
 import { Header, TopBox } from "./styles";
-
-interface IForm {
-  firstName: string;
-  lastName: string;
-  email: string;
-  userName: string;
-  password: string;
-  error: string;
-}
 
 const CREATE_ACCOUNT_MUTATION = gql`
   mutation createAccount(
@@ -48,6 +39,15 @@ const CREATE_ACCOUNT_MUTATION = gql`
     }
   }
 `;
+
+interface IForm {
+  firstName: string;
+  lastName: string;
+  email: string;
+  userName: string;
+  password: string;
+  error: string;
+}
 
 const SignUp: React.FC = () => {
   const history = useHistory();
@@ -189,7 +189,7 @@ const SignUp: React.FC = () => {
       </TopBox>
       <BottomBox>
         <span>Have an account?</span>
-        <Link to={routes.signIn}>Log in</Link>
+        <BaseLink to={routes.signIn}>Log in</BaseLink>
       </BottomBox>
     </AuthLayout>
   );

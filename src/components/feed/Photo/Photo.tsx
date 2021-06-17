@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import {
   Button,
   Container,
@@ -22,7 +23,7 @@ import {
 import { faHeart as faHeartSoild } from "@fortawesome/free-solid-svg-icons";
 import { useMutation } from "@apollo/client";
 import { seeFeed_seeFeed } from "../../../__generated__/seeFeed";
-import { BoldText, Icon, Link } from "../../base";
+import { BoldText, Icon, BaseLink } from "../../base";
 import Avatar from "../../shared/Avatar";
 import gql from "graphql-tag";
 import CommentList from "../CommentList";
@@ -92,9 +93,9 @@ const Photo: React.FC<IProps> = ({ photo }) => {
         // 예) #天気 #ビスを展開
         if (obj[0] === word) {
           return (
-            <Link key={index} to={`/hashtags/${word}`}>
+            <BaseLink key={index} to={`/hashtags/${word}`}>
               {`${word} `}
-            </Link>
+            </BaseLink>
           );
           // 정규표현식에 일치하지 않는 문자 포함 시
           // 예) #天気、 #スポーツ?? #ビスを展開。
@@ -102,7 +103,7 @@ const Photo: React.FC<IProps> = ({ photo }) => {
           const rest = word.replace(obj[0], "");
           return (
             <React.Fragment key={index}>
-              <Link to={`/hashtags/${obj[0]}`}>{obj[0]}</Link>
+              <BaseLink to={`/hashtags/${obj[0]}`}>{obj[0]}</BaseLink>
               {`${rest} `}
             </React.Fragment>
           );
@@ -117,8 +118,12 @@ const Photo: React.FC<IProps> = ({ photo }) => {
   return (
     <Container>
       <Header>
-        <Avatar url={user.avatar ?? ""} size={32} />
-        <Author>{user.userName}</Author>
+        <Link to={`/users/${user.userName}`}>
+          <Avatar url={user.avatar ?? ""} size={32} />
+        </Link>
+        <Link to={`/users/${user.userName}`}>
+          <Author>{user.userName}</Author>
+        </Link>
       </Header>
       <Image>
         <img src={file} alt={caption ?? "picture"} />
@@ -154,7 +159,9 @@ const Photo: React.FC<IProps> = ({ photo }) => {
         )}
         {caption && (
           <Caption>
-            <BoldText>{user.userName}</BoldText>
+            <Link to={`/users/${user.userName}`}>
+              <BoldText>{user.userName}</BoldText>
+            </Link>
             <CaptionText>{remakeCaption(caption)}</CaptionText>
           </Caption>
         )}

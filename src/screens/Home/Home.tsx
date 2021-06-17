@@ -7,37 +7,27 @@ import { Button } from "../../components/base";
 import { seeFeed } from "../../__generated__/seeFeed";
 import Photo from "../../components/feed/Photo";
 import PageTitle from "../../components/shared/PageTitle";
+import {
+  COMMENT_FRAGMENT,
+  PHOTO_FRAGMENT,
+  USER_FRAGMENT,
+} from "../../fragments";
 
 const FEED_QUERY = gql`
   query seeFeed {
     seeFeed {
-      id
+      ...PhotoFragment
       user {
-        userName
-        avatar
+        ...UserFragment
       }
-      file
-      caption
-      likeCount
       comments {
-        id
-        user {
-          userName
-          avatar
-        }
-        photo {
-          id
-        }
-        text
-        isMine
-        createdAt
+        ...CommentFragment
       }
-      commentCount
-      createdAt
-      isMine
-      isLiked
     }
   }
+  ${USER_FRAGMENT}
+  ${COMMENT_FRAGMENT}
+  ${PHOTO_FRAGMENT}
 `;
 
 const Home: React.FC = () => {

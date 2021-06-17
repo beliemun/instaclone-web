@@ -61,7 +61,7 @@ const Header: React.FC = ({ children }) => {
               <Icon to="#">
                 <FontAwesomeIcon icon={faCompass} size="lg" />
               </Icon>
-              <Icon to="#">
+              <Icon to={`/users/${data?.me?.userName}`}>
                 <Avatar url={data?.me?.avatar} size={24} />
               </Icon>
             </>

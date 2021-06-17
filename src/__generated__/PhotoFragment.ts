@@ -4,11 +4,17 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL fragment: ISLIKED
+// GraphQL fragment: PhotoFragment
 // ====================================================
 
-export interface ISLIKED {
+export interface PhotoFragment {
   __typename: "Photo";
+  id: number;
+  file: string;
+  caption: string | null;
+  likeCount: number;
+  commentCount: number;
   isLiked: boolean;
-  likes: number;
+  createdAt: string;
+  isMine: boolean;
 }

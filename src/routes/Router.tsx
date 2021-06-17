@@ -7,6 +7,7 @@ import NotFound from "../screens/404/404";
 import Home from "../screens/Home/Home";
 import Login from "../screens/Login";
 import SignUp from "../screens/SignUp";
+import Profile from "../screens/Profile";
 
 const Router = () => {
   const isLoggedIn = useReactiveVar(isLoggedInVar);
@@ -32,6 +33,9 @@ const Router = () => {
             </Route>
           </>
         ) : null}
+        <Route path={`/users/:userName`}>
+          <Profile />
+        </Route>
         <Route>
           <NotFound />
         </Route>

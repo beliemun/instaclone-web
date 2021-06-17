@@ -20,7 +20,7 @@ export const HorizontalLine = styled.div`
   background-color: ${(props) => props.theme.borderColorLight};
 `;
 
-export const Link = styled(ReactRouteLink)`
+export const BaseLink = styled(ReactRouteLink)`
   color: #0597f6;
   font-weight: 600;
   text-decoration: none;

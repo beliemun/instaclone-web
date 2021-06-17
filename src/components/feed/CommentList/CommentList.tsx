@@ -6,6 +6,7 @@ import useUser from "../../../hooks/useUser";
 import CommentItem from "../CommentItem";
 import gql from "graphql-tag";
 import { useMutation } from "@apollo/client";
+import { COMMENT_FRAGMENT } from "../../../fragments";
 
 const CREATE_COMMENT_MUTATION = gql`
   mutation createComment($photoId: Int!, $text: String!) {
@@ -47,18 +48,8 @@ const CommentList: React.FC<IProps> = ({ photoId, comments }) => {
             },
           };
           const newCacheComment = cache.writeFragment({
-            fragment: gql`
-              fragment WriteComment on Comment {
-                id
-                text
-                isMine
-                createdAt
-                user {
-                  userName
-                  avatar
-                }
-              }
-            `,
+            fragment: COMMENT_FRAGMENT,
+            fragmentName: "CommentFragment", // Fragment를 변수로 넣을때는 이름을 따로 넣어줘야 한다.
             data: newComment,
           });
           cache.modify({
@@ -96,7 +87,11 @@ const CommentList: React.FC<IProps> = ({ photoId, comments }) => {
       {comments?.length !== 0 && (
         <CommentContainer>
           {comments?.map((comment) => (
-            <CommentItem comment={comment} key={comment?.id} />
+            <CommentItem
+              comment={comment}
+              photoId={photoId}
+              key={comment?.id}
+            />
           ))}
         </CommentContainer>
       )}

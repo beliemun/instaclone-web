@@ -4,20 +4,20 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL fragment: WriteComment
+// GraphQL fragment: CommentFragment
 // ====================================================
 
-export interface WriteComment_user {
+export interface CommentFragment_user {
   __typename: "User";
   userName: string;
   avatar: string | null;
 }
 
-export interface WriteComment {
+export interface CommentFragment {
   __typename: "Comment";
   id: number;
+  user: CommentFragment_user;
   text: string;
   isMine: boolean;
   createdAt: string;
-  user: WriteComment_user;
 }

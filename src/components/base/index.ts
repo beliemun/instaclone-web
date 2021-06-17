@@ -2,9 +2,17 @@ import {
   BaseBox,
   BaseCenterBox,
   HorizontalLine,
-  Link,
+  BaseLink,
   Button,
   BoldText,
   Icon,
 } from "./Base";
-export { BaseBox, BaseCenterBox, HorizontalLine, Link, Button, BoldText, Icon };
+export {
+  BaseBox,
+  BaseCenterBox,
+  HorizontalLine,
+  BaseLink,
+  Button,
+  BoldText,
+  Icon,
+};
