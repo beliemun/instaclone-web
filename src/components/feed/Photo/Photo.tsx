@@ -27,10 +27,6 @@ import Avatar from "../../shared/Avatar";
 import gql from "graphql-tag";
 import CommentList from "../CommentList";
 
-interface IProps {
-  photo: seeFeed_seeFeed;
-}
-
 const TOGGLE_LIKE_MUTATION = gql`
   mutation toggleLike($id: Int!) {
     toggleLike(id: $id) {
@@ -40,45 +36,47 @@ const TOGGLE_LIKE_MUTATION = gql`
   }
 `;
 
+interface IProps {
+  photo: seeFeed_seeFeed;
+}
+
 const Photo: React.FC<IProps> = ({ photo }) => {
   const {
     id,
     user,
     file,
     caption,
-    likes,
+    likeCount,
     comments,
     commentCount,
     // isMine,
     isLiked,
   } = photo;
 
-  const updateToggleLike = (cache: any, result: any) => {
-    const {
-      data: {
-        toggleLike: { ok },
-      },
-    } = result;
-    if (ok) {
-      cache.modify({
-        id: `Photo:${id}`,
-        fields: {
-          isLiked(prev: any) {
-            return !prev;
-          },
-          likes(prev: any) {
-            return isLiked ? prev - 1 : prev + 1;
-          },
-        },
-      });
-    }
-  };
-
   const [toogleLike] = useMutation(TOGGLE_LIKE_MUTATION, {
     variables: {
       id,
     },
-    update: updateToggleLike,
+    update: (cache: any, result: any) => {
+      const {
+        data: {
+          toggleLike: { ok },
+        },
+      } = result;
+      if (ok) {
+        cache.modify({
+          id: `Photo:${id}`,
+          fields: {
+            isLiked(prev: any) {
+              return !prev;
+            },
+            likeCount(prev: any) {
+              return isLiked ? prev - 1 : prev + 1;
+            },
+          },
+        });
+      }
+    },
     // refetchQueries: [{ query: FEED_QUERY }],
     // apollo가 data를 fetch해서 바뀐 cache부분을 확인해서 update한다.
     // 하지만 실시간 처리 및 큰 쿼리인 경우 쿼리 전체를 타겟으로 하는 것은 좋지 않다.
@@ -148,10 +146,10 @@ const Photo: React.FC<IProps> = ({ photo }) => {
             </Icon>
           </div>
         </ActionIcons>
-        {likes !== 0 && (
+        {likeCount !== 0 && (
           <Likes>
-            {likes}
-            {likes === 1 ? " like" : " likes"}
+            {likeCount}
+            {likeCount === 1 ? " like" : " likes"}
           </Likes>
         )}
         {caption && (

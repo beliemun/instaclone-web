@@ -9,4 +9,12 @@ export const Container = styled.div`
 
 export const Text = styled.span`
   margin-left: 5px;
+  line-height: 1.5;
+`;
+
+export const DeleteButton = styled.span`
+  font-size: 12px;
+  color: ${(props) => props.theme.borderColorDark};
+  padding: 5px;
+  cursor: pointer;
 `;

@@ -7,15 +7,6 @@ import CommentItem from "../CommentItem";
 import gql from "graphql-tag";
 import { useMutation } from "@apollo/client";
 
-interface IProps {
-  photoId: number;
-  comments: (seeFeed_seeFeed_comments | null)[] | null;
-}
-
-interface IForm {
-  comment: string;
-}
-
 const CREATE_COMMENT_MUTATION = gql`
   mutation createComment($photoId: Int!, $text: String!) {
     createComment(photoId: $photoId, text: $text) {
@@ -26,59 +17,66 @@ const CREATE_COMMENT_MUTATION = gql`
   }
 `;
 
+interface IProps {
+  photoId: number;
+  comments: (seeFeed_seeFeed_comments | null)[] | null;
+}
+
 const CommentList: React.FC<IProps> = ({ photoId, comments }) => {
   const { data: userData } = useUser();
-  const creaetCommentUpdate = (cache: any, result: any) => {
-    const {
-      data: {
-        createComment: { ok, id },
-      },
-    } = result;
-    if (ok && userData?.me) {
-      const { comment } = getValues();
-      setValue("comment", "");
-      const newComment = {
-        __typename: "Comment",
-        id,
-        text: comment,
-        isMine: true,
-        createAt: Date.now(),
-        user: {
-          ...userData.me,
-        },
-      };
-      const newCacheComment = cache.writeFragment({
-        fragment: gql`
-          fragment WriteComment on Comment {
-            id
-            text
-            isMine
-            createdAt
-            user {
-              userName
-              avatar
-            }
-          }
-        `,
-        data: newComment,
-      });
-      console.log(newCacheComment);
-      cache.modify({
-        id: `Photo:${photoId}`,
-        fields: {
-          comments(prev: any) {
-            return [...prev, newCacheComment];
-          },
-        },
-      });
-    }
-  };
-
   const [createCommentMutation, { loading }] = useMutation(
     CREATE_COMMENT_MUTATION,
-    { update: creaetCommentUpdate }
+    {
+      update: (cache, result) => {
+        const {
+          data: {
+            createComment: { ok, id },
+          },
+        } = result;
+        if (ok && userData?.me) {
+          const { comment } = getValues();
+          setValue("comment", "");
+          const newComment = {
+            __typename: "Comment",
+            id,
+            text: comment,
+            isMine: true,
+            createAt: Date.now(),
+            user: {
+              ...userData.me,
+            },
+          };
+          const newCacheComment = cache.writeFragment({
+            fragment: gql`
+              fragment WriteComment on Comment {
+                id
+                text
+                isMine
+                createdAt
+                user {
+                  userName
+                  avatar
+                }
+              }
+            `,
+            data: newComment,
+          });
+          cache.modify({
+            id: `Photo:${photoId}`,
+            fields: {
+              comments(prev: any) {
+                return [...prev, newCacheComment];
+              },
+            },
+          });
+        }
+      },
+    }
   );
 
+  interface IForm {
+    comment: string;
+  }
   const { register, handleSubmit, setValue, getValues } = useForm<IForm>();
   const onSubmitValid: SubmitHandler<IForm> = (data) => {
     const { comment } = data;

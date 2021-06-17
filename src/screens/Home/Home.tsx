@@ -18,12 +18,15 @@ const FEED_QUERY = gql`
       }
       file
       caption
-      likes
+      likeCount
       comments {
         id
         user {
           userName
           avatar
+        }
+        photo {
+          id
         }
         text
         isMine

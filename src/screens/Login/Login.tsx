@@ -51,7 +51,7 @@ const Login: React.FC = () => {
     setError,
     clearErrors,
   } = useForm<IForm>({
-    mode: "onChange",
+    mode: "onBlur",
     defaultValues: {
       userName: location?.state?.userName || "",
       password: location?.state?.password || "",
