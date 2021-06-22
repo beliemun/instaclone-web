@@ -20,6 +20,7 @@ const Container = styled.div`
   justify-content: center;
   background-color: ${(props) => props.theme.windowColor};
   border-bottom: 1px solid ${(props) => props.theme.borderColorLight};
+  z-index: 10;
 `;
 
 const Wrapper = styled.div`
@@ -45,14 +46,14 @@ const Header: React.FC = ({ children }) => {
     <Container>
       <Wrapper>
         <Column>
-          <Icon to="#">
+          <Icon to={routes.home}>
             <FontAwesomeIcon icon={faInstagram} size="2x" />
           </Icon>
         </Column>
         <Column>
           {isLoggedIn ? (
             <>
-              <Icon to="#">
+              <Icon to={routes.home}>
                 <FontAwesomeIcon icon={faHome} size="lg" />
               </Icon>
               <Icon to="#">

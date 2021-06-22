@@ -34,7 +34,13 @@ const Router = () => {
           </>
         ) : null}
         <Route path={`/users/:userName`}>
-          <Profile />
+          {isLoggedIn ? (
+            <HeaderLayout>
+              <Profile />
+            </HeaderLayout>
+          ) : (
+            <Login />
+          )}
         </Route>
         <Route>
           <NotFound />

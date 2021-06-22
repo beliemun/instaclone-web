@@ -21,14 +21,16 @@ export interface seeProfile_seeProfile_photos {
 
 export interface seeProfile_seeProfile {
   __typename: "User";
+  id: number;
   firstName: string;
   lastName: string | null;
   userName: string;
   bio: string | null;
   avatar: string | null;
   photos: (seeProfile_seeProfile_photos | null)[] | null;
-  totalFollowings: number;
+  totalFollowing: number;
   totalFollowers: number;
+  totalPhotos: number;
   isMe: boolean;
   isFollowing: boolean;
 }

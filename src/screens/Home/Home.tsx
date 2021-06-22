@@ -2,8 +2,6 @@ import React from "react";
 import { Container } from "./styles";
 import gql from "graphql-tag";
 import { useQuery } from "@apollo/client";
-import { singOut } from "../../apollo";
-import { Button } from "../../components/base";
 import { seeFeed } from "../../__generated__/seeFeed";
 import Photo from "../../components/feed/Photo";
 import PageTitle from "../../components/shared/PageTitle";
@@ -38,7 +36,6 @@ const Home: React.FC = () => {
       {data?.seeFeed?.map((photo) => (
         <Photo photo={photo} key={photo.id} />
       ))}
-      <Button onClick={() => singOut()}>Log out</Button>
     </Container>
   );
 };
