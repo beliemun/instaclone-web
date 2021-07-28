@@ -9,8 +9,11 @@
 
 export interface CommentFragment_user {
   __typename: "User";
+  id: number;
   userName: string;
   avatar: string | null;
+  isFollowing: boolean;
+  isMe: boolean;
 }
 
 export interface CommentFragment {

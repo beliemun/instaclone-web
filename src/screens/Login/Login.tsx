@@ -96,7 +96,7 @@ const Login: React.FC = () => {
             type="text"
             placeholder="Username"
             hasError={Boolean(errors?.userName?.message)}
-            onKeyDown={() => clearErrors()}
+            onKeyDown={() => clearErrors("userName")}
             {...register("userName", {
               required: true,
               minLength: {
@@ -110,7 +110,7 @@ const Login: React.FC = () => {
             type="password"
             placeholder="Password"
             hasError={Boolean(errors?.password?.message)}
-            onKeyDown={() => clearErrors()}
+            onKeyDown={() => clearErrors("password")}
             {...register("password", {
               required: true,
               minLength: {

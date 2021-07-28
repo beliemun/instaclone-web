@@ -4,14 +4,18 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL fragment: UserFragment
+// GraphQL mutation operation: followUser
 // ====================================================
 
-export interface UserFragment {
-  __typename: "User";
-  id: number;
+export interface followUser_followUser {
+  __typename: "MutationResponse";
+  ok: boolean;
+}
+
+export interface followUser {
+  followUser: followUser_followUser | null;
+}
+
+export interface followUserVariables {
   userName: string;
-  avatar: string | null;
-  isFollowing: boolean;
-  isMe: boolean;
 }

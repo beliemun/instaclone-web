@@ -1,5 +1,4 @@
 import React from "react";
-import { seeFeed_seeFeed_comments } from "../../../__generated__/seeFeed";
 import { CommentContainer, Form } from "./styles";
 import { SubmitHandler, useForm } from "react-hook-form";
 import useUser from "../../../hooks/useUser";
@@ -7,6 +6,7 @@ import CommentItem from "../CommentItem";
 import gql from "graphql-tag";
 import { useMutation } from "@apollo/client";
 import { COMMENT_FRAGMENT } from "../../../fragments";
+import { seeFeed_seeFeed_latestComments } from "../../../__generated__/seeFeed";
 
 const CREATE_COMMENT_MUTATION = gql`
   mutation createComment($photoId: Int!, $text: String!) {
@@ -20,11 +20,11 @@ const CREATE_COMMENT_MUTATION = gql`
 
 interface IProps {
   photoId: number;
-  comments: (seeFeed_seeFeed_comments | null)[] | null;
+  latestComments: (seeFeed_seeFeed_latestComments | null)[] | null;
 }
 
-const CommentList: React.FC<IProps> = ({ photoId, comments }) => {
-  const { data: userData } = useUser();
+const CommentList: React.FC<IProps> = ({ photoId, latestComments }) => {
+  const user = useUser();
   const [createCommentMutation, { loading }] = useMutation(
     CREATE_COMMENT_MUTATION,
     {
@@ -34,30 +34,26 @@ const CommentList: React.FC<IProps> = ({ photoId, comments }) => {
             createComment: { ok, id },
           },
         } = result;
-        if (ok && userData?.me) {
-          const { comment } = getValues();
-          setValue("comment", "");
+        if (ok && user.data?.me) {
+          const text = getValues("comment");
           const newComment = {
             __typename: "Comment",
             id,
-            text: comment,
+            text,
             isMine: true,
             createAt: Date.now(),
-            user: {
-              ...userData.me,
-            },
+            user: { ...user.data.me },
           };
-          const newCacheComment = cache.writeFragment({
+          const newCache = cache.writeFragment({
+            id: `Comment:${id}`,
             fragment: COMMENT_FRAGMENT,
-            fragmentName: "CommentFragment", // Fragment를 변수로 넣을때는 이름을 따로 넣어줘야 한다.
+            fragmentName: "CommentFragment",
             data: newComment,
           });
           cache.modify({
             id: `Photo:${photoId}`,
             fields: {
-              comments(prev: any) {
-                return [...prev, newCacheComment];
-              },
+              latestComments: () => newCache,
             },
           });
         }
@@ -70,25 +66,21 @@ const CommentList: React.FC<IProps> = ({ photoId, comments }) => {
   }
   const { register, handleSubmit, setValue, getValues } = useForm<IForm>();
   const onSubmitValid: SubmitHandler<IForm> = (data) => {
-    const { comment } = data;
+    const { comment: text } = data;
     if (loading) {
       return;
     }
-    createCommentMutation({
-      variables: {
-        photoId,
-        text: comment,
-      },
-    });
+    createCommentMutation({ variables: { photoId, text } });
+    setValue("comment", "");
   };
 
   return (
     <>
-      {comments?.length !== 0 && (
+      {latestComments?.length !== 0 && (
         <CommentContainer>
-          {comments?.map((comment) => (
+          {latestComments?.map((comment) => (
             <CommentItem
-              comment={comment}
+              latestComments={comment}
               photoId={photoId}
               key={comment?.id}
             />

@@ -115,9 +115,9 @@ const SignUp: React.FC = () => {
             type="text"
             placeholder="Fisrt Name"
             hasError={Boolean(errors?.firstName?.message)}
-            onKeyDown={() => clearErrors()}
+            onKeyDown={() => clearErrors("firstName")}
             {...register("firstName", {
-              required: "First Name is required.",
+              required: "• First Name is required.",
               pattern: {
                 value: /^[a-zA-Z]+$/,
                 message: "• First Name must contain only the alphabet.",
@@ -129,7 +129,7 @@ const SignUp: React.FC = () => {
             type="text"
             placeholder="Last Name"
             hasError={Boolean(errors?.lastName?.message)}
-            onKeyDown={() => clearErrors()}
+            onKeyDown={() => clearErrors("lastName")}
             {...register("lastName", {
               pattern: {
                 value: /^[a-zA-Z]+$/,
@@ -142,9 +142,9 @@ const SignUp: React.FC = () => {
             type="text"
             placeholder="Email"
             hasError={Boolean(errors?.email?.message)}
-            onKeyDown={() => clearErrors()}
+            onKeyDown={() => clearErrors("email")}
             {...register("email", {
-              required: "Email is required.",
+              required: "• Email is required.",
               pattern: {
                 value: /^[a-z0-9_+.-]+@([a-z0-9-]+\.)+[a-z0-9]{2,4}$/,
                 message: "• It must be in email format.",
@@ -156,9 +156,9 @@ const SignUp: React.FC = () => {
             type="text"
             placeholder="Username"
             hasError={Boolean(errors?.userName?.message)}
-            onKeyDown={() => clearErrors()}
+            onKeyDown={() => clearErrors("userName")}
             {...register("userName", {
-              required: "User name is required.",
+              required: "• User name is required.",
               minLength: {
                 value: 4,
                 message: "• User name should be longer than 4 chars.",
@@ -175,7 +175,7 @@ const SignUp: React.FC = () => {
             type="password"
             placeholder="Password"
             hasError={Boolean(errors?.password?.message)}
-            onKeyDown={() => clearErrors()}
+            onKeyDown={() => clearErrors("password")}
             {...register("password", { required: "Password is requried." })}
           />
           <AccentedText type={"error"} message={errors?.password?.message} />

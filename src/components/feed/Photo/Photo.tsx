@@ -48,7 +48,7 @@ const Photo: React.FC<IProps> = ({ photo }) => {
     file,
     caption,
     likeCount,
-    comments,
+    latestComments,
     commentCount,
     // isMine,
     isLiked,
@@ -171,7 +171,7 @@ const Photo: React.FC<IProps> = ({ photo }) => {
             {commentCount === 1 ? " comment" : " comments"}
           </CommentCount>
         )}
-        <CommentList photoId={id} comments={comments} />
+        <CommentList photoId={id} latestComments={latestComments} />
       </Footer>
     </Container>
   );

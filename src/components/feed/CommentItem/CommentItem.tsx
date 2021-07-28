@@ -1,9 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Container, Text, DeleteButton } from "./styles";
-import { seeFeed_seeFeed_comments } from "../../../__generated__/seeFeed";
 import { BoldText } from "../../base";
 import { gql, useMutation } from "@apollo/client";
+import { seeFeed_seeFeed_latestComments } from "../../../__generated__/seeFeed";
 
 const DELETE_COMMENT_MUTATION = gql`
   mutation deleteComment($id: Int!) {
@@ -15,14 +15,14 @@ const DELETE_COMMENT_MUTATION = gql`
 `;
 
 interface IProps {
-  comment: seeFeed_seeFeed_comments | null;
+  latestComments: seeFeed_seeFeed_latestComments | null;
   photoId: number;
 }
 
-const CommentItem: React.FC<IProps> = ({ comment, photoId }) => {
+const CommentItem: React.FC<IProps> = ({ latestComments, photoId }) => {
   const [deleteCommentMutation] = useMutation(DELETE_COMMENT_MUTATION, {
     variables: {
-      id: comment?.id,
+      id: latestComments?.id,
     },
     update: (cache, result) => {
       const {
@@ -32,7 +32,7 @@ const CommentItem: React.FC<IProps> = ({ comment, photoId }) => {
       } = result;
       if (ok) {
         cache.evict({
-          id: `Comment:${comment?.id}`,
+          id: `Comment:${latestComments?.id}`,
         });
         cache.modify({
           id: `Photo:${photoId}`,
@@ -49,12 +49,12 @@ const CommentItem: React.FC<IProps> = ({ comment, photoId }) => {
     deleteCommentMutation();
   };
   return (
-    <Container key={comment?.id}>
-      <Link to={`/users/${comment?.user.userName}`}>
-        <BoldText>{comment?.user.userName}</BoldText>
+    <Container key={latestComments?.id}>
+      <Link to={`/users/${latestComments?.user.userName}`}>
+        <BoldText>{latestComments?.user.userName}</BoldText>
       </Link>
-      <Text>{comment?.text}</Text>
-      {comment?.isMine && (
+      <Text>{latestComments?.text}</Text>
+      {latestComments?.isMine && (
         <DeleteButton onClick={onDeleteClick}>Delete</DeleteButton>
       )}
     </Container>

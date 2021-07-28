@@ -12,24 +12,29 @@ import {
 } from "../../fragments";
 
 const FEED_QUERY = gql`
-  query seeFeed {
-    seeFeed {
+  query seeFeed($offset: Int!) {
+    seeFeed(offset: $offset) {
       ...PhotoFragment
       user {
         ...UserFragment
       }
-      comments {
+      latestComments {
         ...CommentFragment
       }
     }
   }
   ${USER_FRAGMENT}
-  ${COMMENT_FRAGMENT}
   ${PHOTO_FRAGMENT}
+  ${COMMENT_FRAGMENT}
 `;
 
 const Home: React.FC = () => {
-  const { data } = useQuery<seeFeed>(FEED_QUERY);
+  const { data } = useQuery<seeFeed>(FEED_QUERY, {
+    variables: {
+      offset: 0,
+    },
+  });
+
   return (
     <Container>
       <PageTitle title={"Home"} />
