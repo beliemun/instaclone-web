@@ -6,7 +6,7 @@ import CommentItem from "../CommentItem";
 import gql from "graphql-tag";
 import { useMutation } from "@apollo/client";
 import { COMMENT_FRAGMENT } from "../../../fragments";
-import { seeFeed_seeFeed_latestComments } from "../../../__generated__/seeFeed";
+import { seeFeed_seeFeed_comments } from "../../../__generated__/seeFeed";
 
 const CREATE_COMMENT_MUTATION = gql`
   mutation createComment($photoId: Int!, $text: String!) {
@@ -20,10 +20,10 @@ const CREATE_COMMENT_MUTATION = gql`
 
 interface IProps {
   photoId: number;
-  latestComments: (seeFeed_seeFeed_latestComments | null)[] | null;
+  comments: (seeFeed_seeFeed_comments | null)[] | null;
 }
 
-const CommentList: React.FC<IProps> = ({ photoId, latestComments }) => {
+const CommentList: React.FC<IProps> = ({ photoId, comments }) => {
   const user = useUser();
   const [createCommentMutation, { loading }] = useMutation(
     CREATE_COMMENT_MUTATION,
@@ -53,7 +53,7 @@ const CommentList: React.FC<IProps> = ({ photoId, latestComments }) => {
           cache.modify({
             id: `Photo:${photoId}`,
             fields: {
-              latestComments: () => newCache,
+              comments: () => newCache,
             },
           });
         }
@@ -76,11 +76,11 @@ const CommentList: React.FC<IProps> = ({ photoId, latestComments }) => {
 
   return (
     <>
-      {latestComments?.length !== 0 && (
+      {comments?.length !== 0 && (
         <CommentContainer>
-          {latestComments?.map((comment) => (
+          {comments?.map((comment) => (
             <CommentItem
-              latestComments={comment}
+              comments={comment}
               photoId={photoId}
               key={comment?.id}
             />

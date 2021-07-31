@@ -16,7 +16,7 @@ export interface seeFeed_seeFeed_user {
   isMe: boolean;
 }
 
-export interface seeFeed_seeFeed_latestComments_user {
+export interface seeFeed_seeFeed_comments_user {
   __typename: "User";
   id: number;
   userName: string;
@@ -25,10 +25,10 @@ export interface seeFeed_seeFeed_latestComments_user {
   isMe: boolean;
 }
 
-export interface seeFeed_seeFeed_latestComments {
+export interface seeFeed_seeFeed_comments {
   __typename: "Comment";
   id: number;
-  user: seeFeed_seeFeed_latestComments_user;
+  user: seeFeed_seeFeed_comments_user;
   text: string;
   isMine: boolean;
   createdAt: string;
@@ -45,9 +45,13 @@ export interface seeFeed_seeFeed {
   createdAt: string;
   isMine: boolean;
   user: seeFeed_seeFeed_user;
-  latestComments: seeFeed_seeFeed_latestComments[] | null;
+  comments: seeFeed_seeFeed_comments[] | null;
 }
 
 export interface seeFeed {
   seeFeed: seeFeed_seeFeed[] | null;
+}
+
+export interface seeFeedVariables {
+  offset: number;
 }

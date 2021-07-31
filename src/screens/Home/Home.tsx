@@ -18,7 +18,7 @@ const FEED_QUERY = gql`
       user {
         ...UserFragment
       }
-      latestComments {
+      comments {
         ...CommentFragment
       }
     }
